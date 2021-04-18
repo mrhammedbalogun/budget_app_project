@@ -28,7 +28,7 @@ class Budget():
             new_balance = balance + amt #Budget.deposit(amt, balance)
             database[cat_name] = new_balance
             print(f'\n{cat_name} category as been credited with NGN {amt}\nTotal {cat_name} category budget amount is now NGN {new_balance}')
-            menu()
+            Budget.quitoption()
 
         else:
             print('')
@@ -38,7 +38,7 @@ class Budget():
             elif (pick == "rb"):
                 Budget.deposit()
             elif (pick == "mm"):
-                menu()
+                Budget.quitoption()
             else:
                 print('Invalid option\n')
                 Budget.deposit()
@@ -57,7 +57,7 @@ class Budget():
                     Budget.deposit()
 
                 elif response == "mm":
-                    menu()
+                    Budget.quitoption()
                 
                 else:
                     print("Invalid input")
@@ -69,7 +69,7 @@ class Budget():
                 new_balance = balance - withdraw_amt 
                 database[cat_name] = new_balance
                 print(f'\n{cat_name} category as been debited with NGN {withdraw_amt}\nTotal {cat_name} category budget amount is now NGN {new_balance}')
-                menu()
+                Budget.quitoption()
         
         else:
             print("Invalid cat name")
@@ -80,15 +80,20 @@ class Budget():
         cat_name = input("From what category would you like to transfer: ")
         if cat_name in database:
             transfer_amt = int(input("Please enter amount you would like to transfer: "))
-            balance = int(database[cat_name])
-            if transfer_amt < balance:
+            sending_balance = int(database[cat_name])
+            if transfer_amt < sending_balance:
                 receiving_cat = input("What category are you sending too: ").lower()
                 receiving_balance = int(database[receiving_cat])
                 new_balance = receiving_balance + transfer_amt
                 database[receiving_cat] = new_balance
 
-                print(f"\n{receiving_cat} as been credited NGN{transfer_amt}. {receiving_cat} now have total balance of NGN{receiving_balance}")
-                menu()
+                new_sending_balance = sending_balance - transfer_amt
+                database[cat_name] = new_sending_balance
+
+
+
+                print(f"\n{receiving_cat} as been credited NGN{transfer_amt}. {receiving_cat} now have total balance of NGN{new_balance}")
+                Budget.quitoption()
             else:
                 print(f"You do not have enough fund in {cat_name}")
         
@@ -109,26 +114,38 @@ class Budget():
         balance = int(database[cat_name])
         print(cat_name + " NGN" + str(balance))
 
+        Budget.quitoption()
+
         
 
-        """for cat, bal in database.items():
-            print(categ, bal)"""
     
     @staticmethod
     def new_budget_category():
-        print("\n=== ***Creating a New Budget**** ===\n")
+        print("\n=== Creating a New Budget ===\n")
 
         budget_title = input("Enter budget name \n")
         try:
             amount = int(input("Enter your budget amount \n$"))
         except:
             print('\nInvalid input')
-            new_budget()
+            Budget.new_budget_category()
         #budget = Budget(budget_title, amount)
         database[budget_title] = amount
         print('')
         print(f'Budget {budget_title} was setup with ${amount}')
-        menu()
+        Budget.quitoption()
+
+    def quitoption():
+        option = input("What would you like to do next? \n\nEnter [q] To exit the app \nEnter [mm] To go back to main menu\n\n>").lower()
+        if option == "mm":
+            menu()
+            
+        elif option == "q":
+            print("Logging off ............")
+            quit()
+
+        else:
+            print("Invalid input")
 
 
 
