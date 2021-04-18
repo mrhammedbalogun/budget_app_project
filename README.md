@@ -1,1 +1,2 @@
-# budget_app_project
+# budget app project
+# Zuri training budget app assignment
